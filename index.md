@@ -1,15 +1,9 @@
 # Floor Cleaning Robot
-Replace this text with a brief description (2-3 sentences) of your project. This description should draw the reader in and make them interested in what you've built. You can include what the biggest challenges, takeaways, and triumphs from completing the project were. As you complete your portfolio, remember your audience is less familiar than you are with all that your project entails!
-
-You should comment out all portions of your portfolio that you have not completed yet, as well as any instructions:
-```HTML 
-<!--- This is an HTML comment in Markdown -->
-<!--- Anything between these symbols will not render on the published site -->
-```
+This project uses an arduino board to control a robot car that cleans the floor. The robot uses three sensors to detect obstacles(2 ir sensors and 1 ultrasonic sensor) and uses 4 dc motors and a motor driver to control the movement. A vaccum is attached to the car so it cleans up the space as the car passes through. This car is fully autonomous which means it navigates on its own.
 
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
-| Austin L. | Monta Vista High School | Unclear | Incoming Junior |
+| Austin L. | Monta Vista High School | Eletrical Engineering | Incoming Junior |
 
 **Replace the BlueStamp logo below with an image of yourself and your completed project. Follow the guide [here](https://tomcam.github.io/least-github-pages/adding-images-github-pages-site.html) if you need help.**
 
