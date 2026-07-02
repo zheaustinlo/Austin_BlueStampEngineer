@@ -1,5 +1,9 @@
 # Floor Cleaning Robot
-This project uses an arduino board to control a robot car that cleans the floor. The robot uses three sensors to detect obstacles(2 ir sensors and 1 ultrasonic sensor) and uses 4 dc motors and a motor driver to control the movement. A vaccum is attached to the car so it cleans up the space as the car passes through. This car is fully autonomous which means it navigates on its own.
+This project uses an Arduino Uno to control a robot that automatically cleans the floor. The robot is equipped with two IR sensors and one ultrasonic sensor to detect and avoid obstacles while moving around. A motor driver controls four DC motors, allowing the robot to move in different directions. A vacuum is attached to the robot so it cleans the floor as it moves. The robot operates fully autonomously without requiring human control.
+
+
+
+
 
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
@@ -37,10 +41,9 @@ For your second milestone, explain what you've worked on since your previous mil
 
 # First Milestone
 
-**Don't forget to replace the text below with the embedding for your milestone video. Go to Youtube, click Share -> Embed, and copy and paste the code to replace what's below.**
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nKPl_gTzEUg?si=VUmnqW-5C8x7qbSd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/CaCazFBhYKs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-
+My first milestone was assembling the robot chassis. I attached the mini breadboard, TT motors, TT wheels, the L9110 motor driver, the Arduino Uno board, and three sensors to the robot. I also connected the motors to the motor driver and connected the motor driver's input pins to the Arduino so the Arduino could control the motors and move the car in different directions. In addition, I wrote and tested the code that enabled the robot to move forward, backward, turn left, and turn right autonomously. For my next milestone, I will wire the sensors to the Arduino and program the robot to detect and avoid obstacles. I will also write code that allows the robot to walk around randomly, so it can clean up a large area.
 For your first milestone, describe what your project is and how you plan to build it. You can include:
 - An explanation about the different components of your project and how they will all integrate together
 - Technical progress you've made so far
