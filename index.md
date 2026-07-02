@@ -3,7 +3,7 @@ This project uses an arduino board to control a robot car that cleans the floor.
 
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
-| Austin L. | Monta Vista High School | Eletrical Engineering | Incoming Junior |
+| Austin L. | Monta Vista High School | Electrical Engineering | Incoming Junior |
 
 **Replace the BlueStamp logo below with an image of yourself and your completed project. Follow the guide [here](https://tomcam.github.io/least-github-pages/adding-images-github-pages-site.html) if you need help.**
 
