@@ -215,8 +215,8 @@ Don't forget to place the link of where to buy each component inside the quotati
 
 | **Part** | **Note** | **Price** | **Link** |
 |:--:|:--:|:--:|:--:|
-| 3-in-1 Ultimate Kit for Arduino Uno R3 | self driving car | $59.99 | (https://www.amazon.com/dp/B0CGJ235XN?lv=shuf&channelId=500&plpRedirect=mhFallback) |
-| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
+| 3-in-1 Ultimate Kit for Arduino Uno R3 | self driving car | $69.99 | https://www.amazon.com/dp/B0CGJ235XN?lv=shuf&channelId=500&plpRedirect=mhFallback |
+| ODISTAR Desktop Vacuum Cleaner | clean the floor | $12.98 | https://www.amazon.com/dp/B07Q128V6W?lv=shuf&channelId=500&plpRedirect=mhFallback&th=1 |
 | Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
 
 # Other Resources/Examples
