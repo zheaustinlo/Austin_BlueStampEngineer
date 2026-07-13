@@ -81,8 +81,8 @@ void setup() {
   pinMode(leftIR, INPUT);
   pinMode(rightIR, INPUT);
 
-  EEPROM.write(0, 95);
-  EEPROM.write(1, 98);
+  EEPROM.write(0, 100);
+  EEPROM.write(1, 100);
   leftOffset = EEPROM.read(0) * 0.01;
   rightOffset = EEPROM.read(1) * 0.01;
 
@@ -215,7 +215,7 @@ Don't forget to place the link of where to buy each component inside the quotati
 
 | **Part** | **Note** | **Price** | **Link** |
 |:--:|:--:|:--:|:--:|
-| 3-in-1 Ultimate Kit for Arduino Uno R3 | self driving car | $69.99 | https://www.amazon.com/dp/B0CGJ235XN?lv=shuf&channelId=500&plpRedirect=mhFallback |
+| 3-in-1 Ultimate Kit for Arduino Uno R3(Ultrasonic sensor, 2 ir sensors, arduino uno, L298N Motor driver)| self driving car | $69.99 | https://www.amazon.com/dp/B0CGJ235XN?lv=shuf&channelId=500&plpRedirect=mhFallback |
 | ODISTAR Desktop Vacuum Cleaner | clean the floor | $12.98 | https://www.amazon.com/dp/B07Q128V6W?lv=shuf&channelId=500&plpRedirect=mhFallback&th=1 |
 | Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
 
