@@ -46,15 +46,166 @@ Here's where you'll put images of your schematics. [Tinkercad](https://www.tinke
 Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
 
 ```c++
+#include <EEPROM.h>
+const int A_1B = 5;
+const int A_1A = 6;
+const int B_1B = 9;
+const int B_1A = 10;
+
+const int trigPin = 3;
+const int echoPin = 4;
+const int SAMPLESIZE = 5;
+const int TURNSPEED = 110;
+
+const int rightIR = 7;
+const int leftIR = 8;
+
+const long INTERVAL = 180000;
+const int DISTANCETOSTOP = 20;
+const int MAXMOTORSPEED = 140;
+
+float leftOffset = 1.0;
+float rightOffset = 1.0;
+
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
-  Serial.println("Hello World!");
+
+  pinMode(A_1B, OUTPUT);
+  pinMode(A_1A, OUTPUT);
+  pinMode(B_1B, OUTPUT);
+  pinMode(B_1A, OUTPUT);
+
+  pinMode(echoPin, INPUT);
+  pinMode(trigPin, OUTPUT);
+
+  pinMode(leftIR, INPUT);
+  pinMode(rightIR, INPUT);
+
+  EEPROM.write(0, 95);
+  EEPROM.write(1, 98);
+  leftOffset = EEPROM.read(0) * 0.01;
+  rightOffset = EEPROM.read(1) * 0.01;
+
+  randomSeed(analogRead(A0));
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  // 1. Refresh all sensor data instantly at the start of the loop
+  int left = digitalRead(leftIR);
+  int right = digitalRead(rightIR);
+  float distance = readMedianDist();
 
+  // 2. Generate a random turn duration (mimicking a 0 to 2*PI angle)
+  // Adjust 1000 to match how many milliseconds your robot takes to spin 360 degrees
+  int randomTurnTime = random(700,1800);
+
+  // 3. PRIORITY 1: Obstacle Dead Ahead (Ultrasonic)
+  if (distance < DISTANCETOSTOP && distance > 2) {
+    Serial.println("gonig backwards");
+    moveBackward(MAXMOTORSPEED);
+    delay(200);  // Quick reverse to clear the bumper area
+
+    if (random(0, 2) == 0) {
+      backLeft(TURNSPEED);
+    } else {
+      backRight(TURNSPEED);
+    }
+    delay(randomTurnTime);
+  }
+  // 4. PRIORITY 2: Object on Left Side only
+  else if (!left && right) {
+    backLeft(TURNSPEED);
+    delay(randomTurnTime);
+  }
+  // 5. PRIORITY 3: Object on Right Side only
+  else if (left && !right) {
+    backRight(TURNSPEED);
+    delay(randomTurnTime);
+  }
+  // 6. PRIORITY 4: Both IR sensors trapped
+  else if (!left && !right) {
+    moveBackward(MAXMOTORSPEED);
+    delay(200);
+    if (random(0, 2) == 0) {
+      backLeft(TURNSPEED);
+    } else {
+      backRight(TURNSPEED);
+    }
+    delay(randomTurnTime);
+  }
+  // 7. PATH CLEAR: Safe to drive forward
+  else {
+    if (distance > DISTANCETOSTOP) {
+      moveForward(MAXMOTORSPEED);
+    }
+  }
+}
+float readSensorData() {
+  float distance;
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  distance = pulseIn(echoPin, HIGH, 30000) / 58.00;
+  if (distance == 0) {
+    distance = -1;
+  }
+  return distance;
+}
+
+float readMedianDist() {
+  float median[SAMPLESIZE];
+  for (int i = 0; i < SAMPLESIZE; i++) {
+    median[i] = readSensorData();
+    delay(15);
+  }
+  for (int i = 1; i < SAMPLESIZE; i++) {
+    float key = median[i];
+    int j = i - 1;
+
+    while (j >= 0 && median[j] > key) {
+      median[j + 1] = median[j];
+      j--;
+    }
+    median[j + 1] = key;
+  }
+  return median[SAMPLESIZE / 2];
+}
+
+void moveForward(int speed) {
+  analogWrite(A_1B, 0);
+  analogWrite(A_1A, int(speed * rightOffset));
+  analogWrite(B_1B, int(speed * leftOffset));
+  analogWrite(B_1A, 0);
+}
+
+void moveBackward(int speed) {
+  analogWrite(A_1B, speed);
+  analogWrite(A_1A, 0);
+  analogWrite(B_1B, 0);
+  analogWrite(B_1A, speed);
+}
+
+void backLeft(int speed) {
+  analogWrite(A_1B, speed);
+  analogWrite(A_1A, 0);
+  analogWrite(B_1B, 0);
+  analogWrite(B_1A, 0);
+}
+
+void backRight(int speed) {
+  analogWrite(A_1B, 0);
+  analogWrite(A_1A, 0);
+  analogWrite(B_1B, 0);
+  analogWrite(B_1A, speed);
+}
+
+void stopMove() {
+  analogWrite(A_1B, 0);
+  analogWrite(A_1A, 0);
+  analogWrite(B_1B, 0);
+  analogWrite(B_1A, 0);
 }
 ```
 
