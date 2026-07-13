@@ -215,7 +215,7 @@ Don't forget to place the link of where to buy each component inside the quotati
 
 | **Part** | **Note** | **Price** | **Link** |
 |:--:|:--:|:--:|:--:|
-| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
+| 3-in-1 Ultimate Kit for Arduino Uno R3 | self driving car | $59.99 | [a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a>](https://www.amazon.com/SunFounder-Compatible-Tutorials-Including-Controller/dp/B0B778L1DZ/ref=sr_1_1?crid=2NQEE9YVCWH6A&dib=eyJ2IjoiMSJ9.KsA_AaOdKuN3eTa64St2kmf-k4b0zn7PvqVws6RdSzLu33K3sdCdeNUghHFVD02pZrPeuYhy9V0Bn0CRDhp1h7ir0iqMJllT8ZnbYaI0qa1afNkGbIi10iIywsHX9seNo9VKUNH8O_ZNDj_vTlZYgZvGBJER1peA-DsbinZ27gim_K6d7cmUMfYvueK1MLSv_hPxgkxU9TFku4z7f4T6AB4DRrD0FE3WjKUrZrO-TZPj8PtalCk0Pax4kDlXkWVkCOuRgZAIH4r6CEZeV3iOHvtiROCfNx-F3eUUugQAhI4.9GMBG21dfUQHw2yujBhkAc1qIOPemWBdYxkSbkMrDpQ&dib_tag=se&keywords=3%2Bin%2B1%2Bultimate%2Bkit%2Bfor%2Barduino%2Buno%2Br3&nsdOptOutParam=true&qid=1783974515&s=electronics&sprefix=3%2Bin%2B1%2Bultimate%2Bkit%2Bfor%2Barduino%2Buno%2Br%2Celectronics%2C194&sr=1-1) |
 | Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
 | Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
 
