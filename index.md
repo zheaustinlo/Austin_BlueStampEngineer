@@ -50,44 +50,42 @@ Here's where you'll put your code. The syntax below places it into a block of co
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 
-//motor pins
+// motor pins
 const int A_1B = 5;
 const int A_1A = 6;
 const int B_1B = 9;
 const int B_1A = 10;
 
-//ultrasonic pins
+// ultrasonic pins
 const int trigPin = 3;
 const int echoPin = 4;
-const int SAMPLESIZE = 5; //values to take the median of
-const int TURNSPEED = 255; //has to turn fast
-const long INTERVAL = 6000000;
-const int DISTANCETOSTOP = 20;
-const int MAXMOTORSPEED = 220;
+const int SAMPLESIZE = 5; // values to take the median of
+const int TURNSPEED = 255; // has to turn fast
+const long INTERVAL = 6000000; // run time before stopping
+const int DISTANCETOSTOP = 20; // stop distance for the ultrasonic sensor
+const int MAXMOTORSPEED = 220; // forward speed
 
-
-//ir pins
+// ir pins
 const int rightIR = 7;
 const int leftIR = 8;
 
-//vacuum pins
+// vacuum pins
 const int speakerPin = 11;
 const int vacuumPin = 13;
 
-//only beeps once
-bool beeped = false;
+bool beeped = false; // only beeps once(big buzzer)
 
-Adafruit_MPU6050 mpu; //create the gyro obj
+Adafruit_MPU6050 mpu; // create the gyro obj
 
-float heading = 0; //angle in degrees
-float gyroErrorZ = 0;
+float heading = 0; // current angle
+float gyroErrorZ = 0; // gyro offset
 
-unsigned long previousTime;
-unsigned long startTime;
+unsigned long previousTime; // previous gyro update
+unsigned long startTime; // the time since the program started running 
 
-const float KP = 50.0; //correction
+const float KP = 50.0; // steering correction strength
 
-const int LEFT_TRIM = 75;  // to make the left match the right wheel
+const int LEFT_TRIM = 75; // makes left motor match right
 
 void setup() {
   Serial.begin(9600);
@@ -106,9 +104,9 @@ void setup() {
   pinMode(speakerPin, OUTPUT);
   pinMode(vacuumPin, OUTPUT);
 
-  digitalWrite(vacuumPin, LOW);
+  digitalWrite(vacuumPin, LOW); // vacuum off
 
-  randomSeed(analogRead(A0));
+  randomSeed(analogRead(A0)); // random starting value
 
   if (!mpu.begin()) {
     Serial.println("MPU6050 not found");
@@ -120,22 +118,22 @@ void setup() {
   mpu.setGyroRange(MPU6050_RANGE_500_DEG);
   mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
 
-  calibrateGyro();
+  calibrateGyro(); // find gyro offset
 
-  heading = 0;
+  heading = 0; // reset angle
   previousTime = micros();
-  startTime = millis();
+  startTime = millis(); // save start time
 
   digitalWrite(vacuumPin, HIGH); // turns on the vacuum
 }
 
 void loop() {
-  if (beeped) { //
+  if (beeped) { // stops after beeped so progrom only runs once
     stopMove();
     return;
   }
 
-  updateAngle();
+  updateAngle(); // update robot angle
 
   int left = digitalRead(leftIR);
   int right = digitalRead(rightIR);
@@ -143,13 +141,13 @@ void loop() {
 
   int randomTurnTime = random(700, 1800); // random turn direction
 
-  // Anything from 0 -20 is detected as an obstacle
-  bool obstacleAhead = (distance > 0 && distance < DISTANCETOSTOP); //ultrasonic sensor detects smth ahead
+  // Anything from 0 - 20 is detected as an obstacle
+  bool obstacleAhead = (distance > 0 && distance < DISTANCETOSTOP); // ultrasonic sensor detects smth ahead
   bool pathClearAhead = (distance <= 0 || distance >= DISTANCETOSTOP); 
 
   if (obstacleAhead) { // obstacle straight ahead
     moveBackward(MAXMOTORSPEED);
-    delay(500);
+    delay(200);
 
     if (random(0, 2) == 0) {
       backLeft(TURNSPEED);
@@ -158,7 +156,7 @@ void loop() {
     }
     delay(randomTurnTime);
 
-    //reset heading tracking after every turn so the next
+    // reset heading tracking after every turn so the next
     heading = 0;
     previousTime = micros();
   }
@@ -215,17 +213,16 @@ float readSensorData() {
 
   float distance = pulseIn(echoPin, HIGH, 15000) / 58.0;
 
-  if (distance == 0) {
+  if (distance == 0) { // return -1 if no reading
     distance = -1;
   }
 
   return distance;
 }
 
-// Ultrasonic sensor takes 5 readings and using the middle (median)
-// value instead of a single reading or an average filters out bad readings
+// Ultrasonic sensor takes 5 readings and using the median to filter out the bad readiings
 float readMedianDist() {
-  float median[SAMPLESIZE];
+  float median[SAMPLESIZE]; // takes 5 samples
 
   for (int i = 0; i < SAMPLESIZE; i++) {
     median[i] = readSensorData();
@@ -240,7 +237,7 @@ float readMedianDist() {
       median[j + 1] = median[j];
       j--;
     }
-    median[j + 1] = key;
+    median[j + 1] = key; // sort them from small to big
   }
   return median[SAMPLESIZE / 2];
 }
@@ -251,36 +248,33 @@ void updateAngle() {
   mpu.getEvent(&a, &g, &temp);
 
   unsigned long currentTime = micros();
-  // dt = time elapsed (in seconds) since the last time this ran.
+  // dt = time elapsed since the last time this ran.
   float dt = (currentTime - previousTime) / 1000000.0;
   previousTime = currentTime;
-  float gyroZ = g.gyro.z * 180.0 / PI;//cnverting to degrees
-  heading += (gyroZ - gyroErrorZ) * dt;// fixes the heading
+  float gyroZ = g.gyro.z * 180.0 / PI;// converting to degrees
+  heading += (gyroZ - gyroErrorZ) * dt;// updates the current angle
 }
 
-// take 100 readings 
-
 void calibrateGyro() {
-  gyroErrorZ = 0;
+  gyroErrorZ = 0; // resets gyro error
 
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 100; i++) { // takes 100 readings
     sensors_event_t a, g, temp;
     mpu.getEvent(&a, &g, &temp);
 
     gyroErrorZ += g.gyro.z * 180.0 / PI;
     delay(5);
   }
-  gyroErrorZ /= 100.0;
+  gyroErrorZ /= 100.0; // find average gyro offset
 }
 
-// Steers the robot straight using the heading estimate from updateAngle.
+// drive forward
 void moveForward(int speed) {
   Serial.println("moving forward");
-  float correction = heading * KP;
-  // Makes surecorrection never makes a wheel go negative
-  correction = constrain(correction, -20, 20);
+  float correction = heading * KP; // calculate steering correction
+  correction = constrain(correction, -20, 20); // limit correction
 
-  int rightMotor = constrain(speed - correction, 0, 255);
+  int rightMotor = constrain(speed - correction, 0, 255);  // calculates motor speed
   int leftMotor = constrain(speed + correction + LEFT_TRIM, 0, 255); // added lefttrim so left matches right wheel
 
 
@@ -291,6 +285,7 @@ void moveForward(int speed) {
   analogWrite(B_1A, 0);
 }
 
+// drive backward
 void moveBackward(int speed) {
   Serial.println("moving backward");
   analogWrite(A_1B, speed);
@@ -300,15 +295,17 @@ void moveBackward(int speed) {
   analogWrite(B_1A, speed);
 }
 
+// turn left while backing up
 void backLeft(int speed) {
   Serial.println("backing up to the left");
   analogWrite(A_1B, 0);
   analogWrite(A_1A, speed);
 
   analogWrite(B_1B, 0);
-  analogWrite(B_1A, constrain(speed + LEFT_TRIM, 0, 255));
+  analogWrite(B_1A, constrain(speed + LEFT_TRIM, 0, 255)); // added the trim so left matches right motor
 }
 
+// turn right while backing up
 void backRight(int speed) {
   Serial.println("backing up to the right");
   analogWrite(A_1B, speed);
@@ -318,6 +315,7 @@ void backRight(int speed) {
   analogWrite(B_1A, 0);
 }
 
+// stops the car
 void stopMove() {
   Serial.println("stopping");
   analogWrite(A_1B, 0);
