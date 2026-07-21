@@ -254,7 +254,7 @@ void updateAngle() {
 
   currentTime = micros();  
   // dt = time elapsed sin  ce the last time this ran.
-   dt = (currentTime - previousTime) / 1300000.0;
+   dt = (currentTime - previousTime) / 1000000.0;
   previousTime = currentTime;
    gyroZ = g.gyro.x * 180.0 / PI;// converting to degrees
   heading += (gyroZ - gyroErrorZ) * dt;// updates the current angle
