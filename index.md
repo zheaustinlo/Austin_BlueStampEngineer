@@ -46,26 +46,48 @@ Here's where you'll put images of your schematics. [Tinkercad](https://www.tinke
 Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
 
 ```c++
-#include <EEPROM.h>
+#include <Wire.h>
+#include <Adafruit_MPU6050.h>
+#include <Adafruit_Sensor.h>
+
+//motor pins
 const int A_1B = 5;
 const int A_1A = 6;
 const int B_1B = 9;
 const int B_1A = 10;
 
+//ultrasonic pins
 const int trigPin = 3;
 const int echoPin = 4;
-const int SAMPLESIZE = 5;
-const int TURNSPEED = 110;
+const int SAMPLESIZE = 5; //values to take the median of
+const int TURNSPEED = 255; //has to turn fast
+const long INTERVAL = 6000000;
+const int DISTANCETOSTOP = 20;
+const int MAXMOTORSPEED = 220;
 
+
+//ir pins
 const int rightIR = 7;
 const int leftIR = 8;
 
-const long INTERVAL = 180000;
-const int DISTANCETOSTOP = 20;
-const int MAXMOTORSPEED = 140;
+//vacuum pins
+const int speakerPin = 11;
+const int vacuumPin = 13;
 
-float leftOffset = 1.0;
-float rightOffset = 1.0;
+//only beeps once
+bool beeped = false;
+
+Adafruit_MPU6050 mpu; //create the gyro obj
+
+float heading = 0; //angle in degrees
+float gyroErrorZ = 0;
+
+unsigned long previousTime;
+unsigned long startTime;
+
+const float KP = 50.0; //correction
+
+const int LEFT_TRIM = 75;  // to make the left match the right wheel
 
 void setup() {
   Serial.begin(9600);
@@ -81,29 +103,53 @@ void setup() {
   pinMode(leftIR, INPUT);
   pinMode(rightIR, INPUT);
 
-  EEPROM.write(0, 100);
-  EEPROM.write(1, 100);
-  leftOffset = EEPROM.read(0) * 0.01;
-  rightOffset = EEPROM.read(1) * 0.01;
+  pinMode(speakerPin, OUTPUT);
+  pinMode(vacuumPin, OUTPUT);
+
+  digitalWrite(vacuumPin, LOW);
 
   randomSeed(analogRead(A0));
+
+  if (!mpu.begin()) {
+    Serial.println("MPU6050 not found");
+    while (1) {
+      delay(10);
+    }
+  }
+
+  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+  mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
+
+  calibrateGyro();
+
+  heading = 0;
+  previousTime = micros();
+  startTime = millis();
+
+  digitalWrite(vacuumPin, HIGH); // turns on the vacuum
 }
 
 void loop() {
-  // 1. Refresh all sensor data instantly at the start of the loop
+  if (beeped) { //
+    stopMove();
+    return;
+  }
+
+  updateAngle();
+
   int left = digitalRead(leftIR);
   int right = digitalRead(rightIR);
   float distance = readMedianDist();
 
-  // 2. Generate a random turn duration (mimicking a 0 to 2*PI angle)
-  // Adjust 1000 to match how many milliseconds your robot takes to spin 360 degrees
-  int randomTurnTime = random(700,1800);
+  int randomTurnTime = random(700, 1800); // random turn direction
 
-  // 3. PRIORITY 1: Obstacle Dead Ahead (Ultrasonic)
-  if (distance < DISTANCETOSTOP && distance > 2) {
-    Serial.println("gonig backwards");
+  // Anything from 0 -20 is detected as an obstacle
+  bool obstacleAhead = (distance > 0 && distance < DISTANCETOSTOP); //ultrasonic sensor detects smth ahead
+  bool pathClearAhead = (distance <= 0 || distance >= DISTANCETOSTOP); 
+
+  if (obstacleAhead) { // obstacle straight ahead
     moveBackward(MAXMOTORSPEED);
-    delay(200);  // Quick reverse to clear the bumper area
+    delay(500);
 
     if (random(0, 2) == 0) {
       backLeft(TURNSPEED);
@@ -111,19 +157,26 @@ void loop() {
       backRight(TURNSPEED);
     }
     delay(randomTurnTime);
+
+    //reset heading tracking after every turn so the next
+    heading = 0;
+    previousTime = micros();
   }
-  // 4. PRIORITY 2: Object on Left Side only
-  else if (!left && right) {
+  else if (!left && right) { // obstacle on the left
     backLeft(TURNSPEED);
     delay(randomTurnTime);
+
+    heading = 0;
+    previousTime = micros();
   }
-  // 5. PRIORITY 3: Object on Right Side only
-  else if (left && !right) {
+  else if (left && !right) { // obstacle on the right
     backRight(TURNSPEED);
     delay(randomTurnTime);
+
+    heading = 0;
+    previousTime = micros();
   }
-  // 6. PRIORITY 4: Both IR sensors trapped
-  else if (!left && !right) {
+  else if (!left && !right) { // obstacle on both sides
     moveBackward(MAXMOTORSPEED);
     delay(200);
     if (random(0, 2) == 0) {
@@ -132,34 +185,53 @@ void loop() {
       backRight(TURNSPEED);
     }
     delay(randomTurnTime);
+
+    heading = 0;
+    previousTime = micros();
   }
-  // 7. PATH CLEAR: Safe to drive forward
-  else {
-    if (distance > DISTANCETOSTOP) {
+  else { // clear path
+    if (pathClearAhead) {
       moveForward(MAXMOTORSPEED);
     }
   }
+
+  if (!beeped && millis() - startTime >= INTERVAL) { // checks if the robot has been running for a certain time
+    stopMove();
+    digitalWrite(vacuumPin, LOW);
+    tone(speakerPin, 440, 2000);
+    beeped = true;
+  }
 }
+
+// Sends a short ultrasonic pulse and times how long the echo takes to
 float readSensorData() {
-  float distance;
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
+
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
+
   digitalWrite(trigPin, LOW);
-  distance = pulseIn(echoPin, HIGH, 30000) / 58.00;
+
+  float distance = pulseIn(echoPin, HIGH, 15000) / 58.0;
+
   if (distance == 0) {
     distance = -1;
   }
+
   return distance;
 }
 
+// Ultrasonic sensor takes 5 readings and using the middle (median)
+// value instead of a single reading or an average filters out bad readings
 float readMedianDist() {
   float median[SAMPLESIZE];
+
   for (int i = 0; i < SAMPLESIZE; i++) {
     median[i] = readSensorData();
-    delay(15);
+    delay(5);
   }
+
   for (int i = 1; i < SAMPLESIZE; i++) {
     float key = median[i];
     int j = i - 1;
@@ -173,37 +245,84 @@ float readMedianDist() {
   return median[SAMPLESIZE / 2];
 }
 
+//The gyro reports how fast the car is spinning.
+void updateAngle() {
+  sensors_event_t a, g, temp;
+  mpu.getEvent(&a, &g, &temp);
+
+  unsigned long currentTime = micros();
+  // dt = time elapsed (in seconds) since the last time this ran.
+  float dt = (currentTime - previousTime) / 1000000.0;
+  previousTime = currentTime;
+  float gyroZ = g.gyro.z * 180.0 / PI;//cnverting to degrees
+  heading += (gyroZ - gyroErrorZ) * dt;// fixes the heading
+}
+
+// take 100 readings 
+
+void calibrateGyro() {
+  gyroErrorZ = 0;
+
+  for (int i = 0; i < 100; i++) {
+    sensors_event_t a, g, temp;
+    mpu.getEvent(&a, &g, &temp);
+
+    gyroErrorZ += g.gyro.z * 180.0 / PI;
+    delay(5);
+  }
+  gyroErrorZ /= 100.0;
+}
+
+// Steers the robot straight using the heading estimate from updateAngle.
 void moveForward(int speed) {
+  Serial.println("moving forward");
+  float correction = heading * KP;
+  // Makes surecorrection never makes a wheel go negative
+  correction = constrain(correction, -20, 20);
+
+  int rightMotor = constrain(speed - correction, 0, 255);
+  int leftMotor = constrain(speed + correction + LEFT_TRIM, 0, 255); // added lefttrim so left matches right wheel
+
+
   analogWrite(A_1B, 0);
-  analogWrite(A_1A, int(speed * rightOffset));
-  analogWrite(B_1B, int(speed * leftOffset));
+  analogWrite(A_1A, rightMotor);
+
+  analogWrite(B_1B, leftMotor);
   analogWrite(B_1A, 0);
 }
 
 void moveBackward(int speed) {
+  Serial.println("moving backward");
   analogWrite(A_1B, speed);
   analogWrite(A_1A, 0);
+
   analogWrite(B_1B, 0);
   analogWrite(B_1A, speed);
 }
 
 void backLeft(int speed) {
-  analogWrite(A_1B, speed);
-  analogWrite(A_1A, 0);
+  Serial.println("backing up to the left");
+  analogWrite(A_1B, 0);
+  analogWrite(A_1A, speed);
+
   analogWrite(B_1B, 0);
-  analogWrite(B_1A, 0);
+  analogWrite(B_1A, constrain(speed + LEFT_TRIM, 0, 255));
 }
 
 void backRight(int speed) {
-  analogWrite(A_1B, 0);
+  Serial.println("backing up to the right");
+  analogWrite(A_1B, speed);
   analogWrite(A_1A, 0);
-  analogWrite(B_1B, 0);
-  analogWrite(B_1A, speed);
+
+  analogWrite(B_1B, constrain(speed + LEFT_TRIM, 0, 255));
+  analogWrite(B_1A, 0);
 }
 
 void stopMove() {
+  Serial.println("stopping");
   analogWrite(A_1B, 0);
   analogWrite(A_1A, 0);
+
   analogWrite(B_1B, 0);
   analogWrite(B_1A, 0);
 }
