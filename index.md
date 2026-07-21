@@ -60,8 +60,8 @@ const int B_1A = 10;
 const int trigPin = 3;
 const int echoPin = 4;
 const int SAMPLESIZE = 5; // values to take the median of
-const int TURNSPEED = 255; // has to turn fast
-const long INTERVAL = 60000; // run time before stopping
+const int TURNSPEED = 220; // has to turn fast
+const long INTERVAL = 100000; // run time before stopping
 const int DISTANCETOSTOP = 20; // stop distance for the ultrasonic sensor
 const int MAXMOTORSPEED = 220; // forward speed
 
@@ -83,9 +83,8 @@ float gyroErrorZ = 0; // gyro offset
 unsigned long previousTime; // previous gyro update
 unsigned long startTime; // the time since the program started running 
 
-const float KP = 50.0; // steering correction strength
+const float KP = 10; // steering correction strength
 
-const int LEFT_TRIM = 75; // makes left motor match right
 
 void setup() {
   Serial.begin(9600);
@@ -126,7 +125,12 @@ void setup() {
 
   digitalWrite(vacuumPin, HIGH); // turns on the vacuum
 }
-
+int left = 0;
+int right = 0;
+float distance = 0;
+int randomTurnTime;
+bool obstacleAhead;
+bool pathClearAhead;
 void loop() {
   if (beeped) { // stops after beeped so progrom only runs once
     stopMove();
@@ -135,14 +139,14 @@ void loop() {
 
   updateAngle(); // update robot angle
 
-  int left = digitalRead(leftIR);
-  int right = digitalRead(rightIR);
+  left = digitalRead(leftIR);
+  right = digitalRead(rightIR);
   float distance = readMedianDist();
+  
+  randomTurnTime = random(700, 1800); // random turn direction
 
-  int randomTurnTime = random(700, 1800); // random turn direction
-
-  bool obstacleAhead = (distance > 0 && distance < DISTANCETOSTOP);   // Anything from 0 - 20 is detected as an obstacle
-  bool pathClearAhead = (distance <= 0 || distance >= DISTANCETOSTOP); 
+  obstacleAhead = (distance > 0 && distance < DISTANCETOSTOP);   // Anything from 0 - 20 is detected as an obstacle
+  pathClearAhead = (distance <= 0 || distance >= DISTANCETOSTOP); 
 
   if (obstacleAhead) { // obstacle straight ahead
     moveBackward(MAXMOTORSPEED);
@@ -166,6 +170,7 @@ void loop() {
     heading = 0;
     previousTime = micros();
   }
+
   else if (left && !right) { // obstacle on the right
     backLeft(TURNSPEED); // turn away, to the left
     delay(randomTurnTime);
@@ -173,6 +178,7 @@ void loop() {
     heading = 0;
     previousTime = micros();
   }
+
   else if (!left && !right) { // obstacle on both sides
     moveBackward(MAXMOTORSPEED);
     delay(500);
@@ -198,7 +204,7 @@ void loop() {
     beeped = true;
   }
 }
-
+float otherDistance = 0;
 // Sends a short ultrasonic pulse and times how long the echo takes to
 float readSensorData() {
   digitalWrite(trigPin, LOW);
@@ -209,17 +215,18 @@ float readSensorData() {
 
   digitalWrite(trigPin, LOW);
 
-  float distance = pulseIn(echoPin, HIGH, 15000) / 58.0;
+  otherDistance = pulseIn(echoPin, HIGH, 15000) / 58.0;
 
   if (distance == 0) { // return -1 if no reading
     distance = -1;
   }
-  return distance;
+  return otherDistance;
 }
-
+float median[SAMPLESIZE];
+float key;
 // Ultrasonic sensor takes 5 readings and using the median to filter out the bad readiings
 float readMedianDist() {
-  float median[SAMPLESIZE]; // takes 5 samples
+  median[SAMPLESIZE]; // takes 5 samples
 
   for (int i = 0; i < SAMPLESIZE; i++) {
     median[i] = readSensorData();
@@ -227,7 +234,7 @@ float readMedianDist() {
   }
 
   for (int i = 1; i < SAMPLESIZE; i++) {
-    float key = median[i];
+    key = median[i];
     int j = i - 1;
 
     while (j >= 0 && median[j] > key) {
@@ -238,17 +245,18 @@ float readMedianDist() {
   }
   return median[SAMPLESIZE / 2];
 }
-
+sensors_event_t a, g, temp; 
+unsigned long currentTime;
+float dt, gyroZ;
 //The gyro reports how fast the car is spinning.
 void updateAngle() {
-  sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
 
-  unsigned long currentTime = micros();
-  // dt = time elapsed since the last time this ran.
-  float dt = (currentTime - previousTime) / 1000000.0;
+  currentTime = micros();  
+  // dt = time elapsed sin  ce the last time this ran.
+   dt = (currentTime - previousTime) / 1300000.0;
   previousTime = currentTime;
-  float gyroZ = g.gyro.z * 180.0 / PI;// converting to degrees
+   gyroZ = g.gyro.x * 180.0 / PI;// converting to degrees
   heading += (gyroZ - gyroErrorZ) * dt;// updates the current angle
 }
 
@@ -256,34 +264,43 @@ void calibrateGyro() {
   gyroErrorZ = 0; // resets gyro error
 
   for (int i = 0; i < 100; i++) { // takes 100 readings
-    sensors_event_t a, g, temp;
     mpu.getEvent(&a, &g, &temp);
 
-    gyroErrorZ += g.gyro.z * 180.0 / PI;
+    gyroErrorZ += g.gyro.x * 180.0 / PI;
     delay(5);
   }
   gyroErrorZ /= 100.0; // find average gyro offset
+
 }
 
 // drive forward
+float correction;
+int rightMotor, leftMotor;
+
 void moveForward(int speed) {
-  Serial.println("moving forward");
-  float correction = heading * KP; // calculate steering correction
-  correction = constrain(correction, -20, 20); // limit correction
-
-  int rightMotor = constrain(speed - correction, 0, 255);  // calculates motor speed
-  int leftMotor = constrain(speed + correction + LEFT_TRIM, 0, 255); // added lefttrim so left matches right wheel
-
+  // Serial.println("moving forward");
+   correction = heading * KP; // calculate steering correction
+  correction = constrain(correction, -100, 100); // limit correction
+   rightMotor = constrain(speed - correction, 0, 255);  // calculates motor speed
+   leftMotor = constrain(speed + correction, 0, 255); // added lefttrim so left matches right wheel
+  if(correction < 0){
+    Serial.println("going left!");
+    Serial.println(correction);
+  }
+  else if(correction > 0){
+    Serial.println("going write pls work!!!!!!!!!!");
+  }
   analogWrite(A_1B, 0);
   analogWrite(A_1A, rightMotor);
 
   analogWrite(B_1B, leftMotor);
   analogWrite(B_1A, 0);
+
 }
 
 // drive backward
 void moveBackward(int speed) {
-  Serial.println("moving backward");
+  // Serial.println("moving backward");
   analogWrite(A_1B, speed);
   analogWrite(A_1A, 0);
 
@@ -293,34 +310,33 @@ void moveBackward(int speed) {
 
 // turn left while backing up
 void backLeft(int speed) {
-  Serial.println("backing up to the left");
+  // Serial.println("backing up to the left");
   analogWrite(A_1B, 0);
   analogWrite(A_1A, speed);
 
   analogWrite(B_1B, 0);
-  analogWrite(B_1A, constrain(speed + LEFT_TRIM, 0, 255)); // added the trim so left matches right motor
+  analogWrite(B_1A, constrain(speed, 0, 255)); // added the trim so left matches right motor
 }
 
 // turn right while backing up
 void backRight(int speed) {
-  Serial.println("backing up to the right");
+  // Serial.println("backing up to the right");
   analogWrite(A_1B, speed);
   analogWrite(A_1A, 0);
 
-  analogWrite(B_1B, constrain(speed + LEFT_TRIM, 0, 255));
+  analogWrite(B_1B, constrain(speed, 0, 255));
   analogWrite(B_1A, 0);
 }
 
 // stops the car
 void stopMove() {
-  Serial.println("stopping");
+  // Serial.println("stopping");
   analogWrite(A_1B, 0);
   analogWrite(A_1A, 0);
 
   analogWrite(B_1B, 0);
   analogWrite(B_1A, 0);
 }
-
 ```
 
 # Bill of Materials
