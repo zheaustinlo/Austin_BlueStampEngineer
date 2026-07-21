@@ -61,7 +61,7 @@ const int trigPin = 3;
 const int echoPin = 4;
 const int SAMPLESIZE = 5; // values to take the median of
 const int TURNSPEED = 255; // has to turn fast
-const long INTERVAL = 6000000; // run time before stopping
+const long INTERVAL = 60000; // run time before stopping
 const int DISTANCETOSTOP = 20; // stop distance for the ultrasonic sensor
 const int MAXMOTORSPEED = 220; // forward speed
 
@@ -141,13 +141,12 @@ void loop() {
 
   int randomTurnTime = random(700, 1800); // random turn direction
 
-  // Anything from 0 - 20 is detected as an obstacle
-  bool obstacleAhead = (distance > 0 && distance < DISTANCETOSTOP); // ultrasonic sensor detects smth ahead
+  bool obstacleAhead = (distance > 0 && distance < DISTANCETOSTOP);   // Anything from 0 - 20 is detected as an obstacle
   bool pathClearAhead = (distance <= 0 || distance >= DISTANCETOSTOP); 
 
   if (obstacleAhead) { // obstacle straight ahead
     moveBackward(MAXMOTORSPEED);
-    delay(200);
+    delay(500);
 
     if (random(0, 2) == 0) {
       backLeft(TURNSPEED);
@@ -161,14 +160,14 @@ void loop() {
     previousTime = micros();
   }
   else if (!left && right) { // obstacle on the left
-    backLeft(TURNSPEED);
+    backRight(TURNSPEED); // turn away, to the right
     delay(randomTurnTime);
 
     heading = 0;
     previousTime = micros();
   }
   else if (left && !right) { // obstacle on the right
-    backRight(TURNSPEED);
+    backLeft(TURNSPEED); // turn away, to the left
     delay(randomTurnTime);
 
     heading = 0;
@@ -176,7 +175,7 @@ void loop() {
   }
   else if (!left && !right) { // obstacle on both sides
     moveBackward(MAXMOTORSPEED);
-    delay(200);
+    delay(500);
     if (random(0, 2) == 0) {
       backLeft(TURNSPEED);
     } else {
@@ -192,7 +191,6 @@ void loop() {
       moveForward(MAXMOTORSPEED);
     }
   }
-
   if (!beeped && millis() - startTime >= INTERVAL) { // checks if the robot has been running for a certain time
     stopMove();
     digitalWrite(vacuumPin, LOW);
@@ -216,7 +214,6 @@ float readSensorData() {
   if (distance == 0) { // return -1 if no reading
     distance = -1;
   }
-
   return distance;
 }
 
@@ -277,7 +274,6 @@ void moveForward(int speed) {
   int rightMotor = constrain(speed - correction, 0, 255);  // calculates motor speed
   int leftMotor = constrain(speed + correction + LEFT_TRIM, 0, 255); // added lefttrim so left matches right wheel
 
-
   analogWrite(A_1B, 0);
   analogWrite(A_1A, rightMotor);
 
@@ -324,6 +320,7 @@ void stopMove() {
   analogWrite(B_1B, 0);
   analogWrite(B_1A, 0);
 }
+
 ```
 
 # Bill of Materials
