@@ -40,16 +40,15 @@ For my second milestone, I wired two IR sensors and one ultrasonic sensor to the
 My first milestone was assembling the robot chassis. I attached the mini breadboard, TT motors, TT wheels, the L9110 motor driver, the Arduino Uno board, and three sensors to the robot. I also connected the motors to the motor driver and connected the motor driver's input pins to the Arduino so the Arduino could control the motors and move the car in different directions. In addition, I wrote and tested the code that enabled the robot to move forward, backward, turn left, and turn right autonomously. For my next milestone, I will wire the sensors to the Arduino and program the robot to detect and avoid obstacles. I will also write code that allows the robot to walk around randomly, so it can clean up a large area.
 
 # Schematics 
-Here's where you'll put images of your schematics. [Tinkercad](https://www.tinkercad.com/blog/official-guide-to-tinkercad-circuits) and [Fritzing](https://fritzing.org/learning/) are both great resoruces to create professional schematic diagrams, though BSE recommends Tinkercad becuase it can be done easily and for free in the browser.
-### Vacuum Holder
+## Vacuum Holder
 ![Vacuum Holder](vacuum_holder.jpg)
-
 **STL File:** [vacuum holder.stl](vacuum%20holder(updated).stl)
-### Vacuum lid
-
+## Vacuum lid
 ![Vacuum Lid](vacuum_lid.jpg)
-
 **STL File:** [vacuum lid.stl](vacuum%20lid.stl)
+## Robot
+![Robot](robotpart1.jpg)
+![Robot](robotpart2.jpg)
 
 # Code
 Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
@@ -351,9 +350,9 @@ Don't forget to place the link of where to buy each component inside the quotati
 
 | **Part** | **Note** | **Price** | **Link** |
 |:--:|:--:|:--:|:--:|
-| 3-in-1 Ultimate Kit for Arduino Uno R3(Ultrasonic sensor, 2 ir sensors, arduino uno, L298N Motor driver)| self driving car | $69.99 | https://www.amazon.com/dp/B0CGJ235XN?|
-| ODISTAR Desktop Vacuum Cleaner | clean the floor | $12.98 | https://www.amazon.com/dp/B07Q128V6W? |
-| Big buzzer | notifies the user when robot is done | $1.49 | https://www.amazon.com/dp/B0DVT1Q9NK? |
+| 3-in-1 Ultimate Kit for Arduino Uno R3(Ultrasonic sensor, 2 ir sensors, arduino uno, L298N Motor driver)| self driving car | $69.99 | https://www.amazon.com/dp/B0CGJ235XN|
+| ODISTAR Desktop Vacuum Cleaner | clean the floor | $12.98 | https://www.amazon.com/dp/B07Q128V6W |
+| Big buzzer | notifies the user when robot is done | $1.49 | https://www.amazon.com/dp/B0DVT1Q9NK |
 # Other Resources/Examples
 One of the best parts about Github is that you can view how other people set up their own work. Here are some past BSE portfolios that are awesome examples. You can view how they set up their portfolio, and you can view their index.md files to understand how they implemented different portfolio components.
 - [Example 1](https://trashytuber.github.io/YimingJiaBlueStamp/)
