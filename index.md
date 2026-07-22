@@ -1,5 +1,5 @@
 # Floor Cleaning Robot
-This project uses an Arduino Uno to control a robot that automatically cleans the floor. The robot is equipped with two IR sensors and one ultrasonic sensor to detect and avoid obstacles while moving around. A motor driver controls four DC motors, allowing the robot to move in different directions. A vacuum is attached to the robot so it cleans the floor as it moves. The robot operates fully autonomously without requiring human control.
+This project uses an Arduino Uno to control a robot that automatically cleans the floor. The robot is equipped with two IR sensors and one ultrasonic sensor to detect and avoid obstacles while moving around. A motor driver controls two DC motors, allowing the robot to move in different directions. A vacuum is attached to the robot so it cleans the floor as it moves. The robot operates fully autonomously without requiring human control.
 
 
 
@@ -61,7 +61,7 @@ const int trigPin = 3;
 const int echoPin = 4;
 const int SAMPLESIZE = 5; // values to take the median of
 const int TURNSPEED = 220; // has to turn fast
-const long INTERVAL = 100000; // run time before stopping
+const long INTERVAL = 10000; // run time before stopping
 const int DISTANCETOSTOP = 20; // stop distance for the ultrasonic sensor
 const int MAXMOTORSPEED = 220; // forward speed
 
@@ -78,7 +78,7 @@ bool beeped = false; // only beeps once(big buzzer)
 Adafruit_MPU6050 mpu; // create the gyro obj
 
 float heading = 0; // current angle
-float gyroErrorZ = 0; // gyro offset
+float gyroErrorX = 0; // gyro offset
 
 unsigned long previousTime; // previous gyro update
 unsigned long startTime; // the time since the program started running 
@@ -138,10 +138,9 @@ void loop() {
   }
 
   updateAngle(); // update robot angle
-
   left = digitalRead(leftIR);
   right = digitalRead(rightIR);
-  float distance = readMedianDist();
+  distance = readMedianDist();
   
   randomTurnTime = random(700, 1800); // random turn direction
 
@@ -217,8 +216,8 @@ float readSensorData() {
 
   otherDistance = pulseIn(echoPin, HIGH, 15000) / 58.0;
 
-  if (distance == 0) { // return -1 if no reading
-    distance = -1;
+  if (otherDistance == 0) { // return -1 if no reading
+    otherDistance = -1;
   }
   return otherDistance;
 }
@@ -226,8 +225,6 @@ float median[SAMPLESIZE];
 float key;
 // Ultrasonic sensor takes 5 readings and using the median to filter out the bad readiings
 float readMedianDist() {
-  median[SAMPLESIZE]; // takes 5 samples
-
   for (int i = 0; i < SAMPLESIZE; i++) {
     median[i] = readSensorData();
     delay(5);
@@ -247,7 +244,7 @@ float readMedianDist() {
 }
 sensors_event_t a, g, temp; 
 unsigned long currentTime;
-float dt, gyroZ;
+float dt, gyroX;
 //The gyro reports how fast the car is spinning.
 void updateAngle() {
   mpu.getEvent(&a, &g, &temp);
@@ -256,20 +253,20 @@ void updateAngle() {
   // dt = time elapsed sin  ce the last time this ran.
    dt = (currentTime - previousTime) / 1000000.0;
   previousTime = currentTime;
-   gyroZ = g.gyro.x * 180.0 / PI;// converting to degrees
-  heading += (gyroZ - gyroErrorZ) * dt;// updates the current angle
+   gyroX = g.gyro.x * 180.0 / PI;// converting to degrees
+  heading += (gyroX - gyroErrorX) * dt;// updates the current angle
 }
 
 void calibrateGyro() {
-  gyroErrorZ = 0; // resets gyro error
+  gyroErrorX = 0; // resets gyro error
 
   for (int i = 0; i < 100; i++) { // takes 100 readings
     mpu.getEvent(&a, &g, &temp);
 
-    gyroErrorZ += g.gyro.x * 180.0 / PI;
+    gyroErrorX += g.gyro.x * 180.0 / PI;
     delay(5);
   }
-  gyroErrorZ /= 100.0; // find average gyro offset
+  gyroErrorX /= 100.0; // find average gyro offset
 
 }
 
@@ -345,10 +342,9 @@ Don't forget to place the link of where to buy each component inside the quotati
 
 | **Part** | **Note** | **Price** | **Link** |
 |:--:|:--:|:--:|:--:|
-| 3-in-1 Ultimate Kit for Arduino Uno R3(Ultrasonic sensor, 2 ir sensors, arduino uno, L298N Motor driver)| self driving car | $69.99 | https://www.amazon.com/dp/B0CGJ235XN?lv=shuf&channelId=500&plpRedirect=mhFallback |
-| ODISTAR Desktop Vacuum Cleaner | clean the floor | $12.98 | https://www.amazon.com/dp/B07Q128V6W?lv=shuf&channelId=500&plpRedirect=mhFallback&th=1 |
-| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
-
+| 3-in-1 Ultimate Kit for Arduino Uno R3(Ultrasonic sensor, 2 ir sensors, arduino uno, L298N Motor driver)| self driving car | $69.99 | https://www.amazon.com/dp/B0CGJ235XN?|
+| ODISTAR Desktop Vacuum Cleaner | clean the floor | $12.98 | https://www.amazon.com/dp/B07Q128V6W? |
+| Big buzzer | notifies the user when robot is done | $1.49 | https://www.amazon.com/dp/B0DVT1Q9NK? |
 # Other Resources/Examples
 One of the best parts about Github is that you can view how other people set up their own work. Here are some past BSE portfolios that are awesome examples. You can view how they set up their portfolio, and you can view their index.md files to understand how they implemented different portfolio components.
 - [Example 1](https://trashytuber.github.io/YimingJiaBlueStamp/)
