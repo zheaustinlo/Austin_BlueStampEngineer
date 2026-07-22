@@ -34,25 +34,22 @@ For your final milestone, explain the outcome of your project. Key details to in
 For my second milestone, I wired two IR sensors and one ultrasonic sensor to the Arduino and programmed them to detect obstacles around the robot. The ultrasonic sensor measures the distance to objects in front of the robot, while the IR sensors detect obstacles on the left and right sides. I also wrote the code for a random walk algorithm similar. The robot first backs up when it detects an obstacle and then randomly chooses to turn left or right for a random amount of time before moving forward again. This makes the robot travel in different directions and cover more area each time it detects an obstacle. One challenge I faced was that the motors would randomly stop while the robot was moving. After testing the hardware, I found that the motor driver was not getting enough power. I fixed this by adding a separate 9 volt power source straight to the motors, which made the robot move much more smoothly. For my final milestone, I will design and 3D print the part that connects the vacuum to the robot, and make sure the robot works properly by fixing any remaining issues.
 
 # First Milestone
-
 <iframe width="560" height="315" src="https://www.youtube.com/embed/nKPl_gTzEUg?si=VUmnqW-5C8x7qbSd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 My first milestone was assembling the robot chassis. I attached the mini breadboard, TT motors, TT wheels, the L9110 motor driver, the Arduino Uno board, and three sensors to the robot. I also connected the motors to the motor driver and connected the motor driver's input pins to the Arduino so the Arduino could control the motors and move the car in different directions. In addition, I wrote and tested the code that enabled the robot to move forward, backward, turn left, and turn right autonomously. For my next milestone, I will wire the sensors to the Arduino and program the robot to detect and avoid obstacles. I will also write code that allows the robot to walk around randomly, so it can clean up a large area.
 
 # Schematics 
-## Vacuum Holder
-![Vacuum Holder](vacuum_holder.jpg)
-**STL File:** [vacuum holder.stl](vacuum%20holder(updated).stl)
-## Vacuum lid
-![Vacuum Lid](vacuum_lid.jpg)
-**STL File:** [vacuum lid.stl](vacuum%20lid.stl)
-## Robot
-![Robot](robotpart1.jpg)
-![Robot](robotpart2.jpg)
+<h4>Vacuum Holder</h4>
+<img src="vacuum_holder.jpg" width="500"><br>
+<b>Vacuum Holder STL:</b> <a href="vacuum%20holder(updated).stl">Download</a>
+<h4>Vacuum Lid</h4>
+<img src="vacuum_lid.jpg" width="500"><br>
+<b>Vacuum Lid STL:</b> <a href="vacuum%20lid.stl">Download</a>
+<h4>Robot</h4>
+<img src="robotpart1.jpg" width="500"><br>
+<img src="robotpart2.jpg" width="500">
 
 # Code
-Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
-
 ```c++
 #include <Wire.h>
 #include <Adafruit_MPU6050.h>
@@ -345,9 +342,6 @@ void stopMove() {
 ```
 
 # Bill of Materials
-Here's where you'll list the parts in your project. To add more rows, just copy and paste the example rows below.
-Don't forget to place the link of where to buy each component inside the quotation marks in the corresponding row after href =. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize this to your project needs. 
-
 | **Part** | **Note** | **Price** | **Link** |
 |:--:|:--:|:--:|:--:|
 | 3-in-1 Ultimate Kit for Arduino Uno R3(Ultrasonic sensor, 2 ir sensors, arduino uno, L298N Motor driver)| self driving car | $69.99 | https://www.amazon.com/dp/B0CGJ235XN|
