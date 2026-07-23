@@ -13,18 +13,11 @@ This project uses an Arduino Uno to control a robot that automatically cleans th
 
 ![Headstone Image](logo.svg)
   
-# Final Milestone
+# Final Milestone & Modifications
 
-**Don't forget to replace the text below with the embedding for your milestone video. Go to Youtube, click Share -> Embed, and copy and paste the code to replace what's below.**
+<<iframe width="560" height="315" src="https://www.youtube.com/embed/6Tg_-RMH1v0?si=8twbWN7D_aOu2v6G" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>>
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/F7M7imOVGug" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-
-For your final milestone, explain the outcome of your project. Key details to include are:
-- What you've accomplished since your previous milestone
-- What your biggest challenges and triumphs were at BSE
-- A summary of key topics you learned about
-- What you hope to learn in the future after everything you've learned at BSE
-
+For my final milestone, I completed the design and 3D printing of a vacuum holder and lid, allowing the vacuum to be attached to the robot chassis. After assembling the robot, I troubleshooted both the hardware and software to ensure it works. After completing the base project, I added three major modifications. Modification 1 was adding a transistor to control the vacuum through the Arduino. The transistor is a electronic switch allowing the Arduino to turn the vacuum on and off. This lets the vacuum start automatically whenever the robot begins moving, so I would only need to turn on one switch to power the entire system. Modification 2 was programming a  timer that automatically stops the motors and activates a buzzer when the robot is done cleaning. This alerts the user that the robot has finished its task. Modification 3 was adding a gyroscope sensor to make the robot drive straight, because the two motors rotate at different speeds with the same amount of power, so the robot drifted to one side. The gyroscope continuously measures the robot's heading, and the Arduino compares the current heading to the correct heading. If the robot begins to drift, the program automatically increases the speed of one motor and decreases the speed of the other, which forces the car to return to the correct path. The biggest challenges I faced at BSE were troubleshooting the hardware and software, especially fixing the transistor circuit and making the gyroscrope work properly. My biggest triumph was seeing the robot successfully avoid obstacles, drive in a straight line, and have all of the components work together as one complete system. I learned about Arduino programming, electronics, motor control, sensors, 3D printing, and debugging in BSE. In the future, I hope to use this robot as a cleaning tool for small areas around my house
 
 
 # Second Milestone
@@ -66,7 +59,7 @@ const int trigPin = 3;
 const int echoPin = 4;
 const int SAMPLESIZE = 5; // values to take the median of
 const int TURNSPEED = 220; // has to turn fast
-const long INTERVAL = 10000; // run time before stopping
+const long INTERVAL = 60000; // run time before stopping
 const int DISTANCETOSTOP = 20; // stop distance for the ultrasonic sensor
 const int MAXMOTORSPEED = 220; // forward speed
 
@@ -342,11 +335,11 @@ void stopMove() {
 ```
 
 # Bill of Materials
-| **Part** | **Note** | **Price** | **Link** |
-|:--:|:--:|:--:|:--:|
-| 3-in-1 Ultimate Kit for Arduino Uno R3(Ultrasonic sensor, 2 ir sensors, arduino uno, L298N Motor driver)| self driving car | $69.99 | https://www.amazon.com/dp/B0CGJ235XN|
-| ODISTAR Desktop Vacuum Cleaner | clean the floor | $12.98 | https://www.amazon.com/dp/B07Q128V6W |
-| Big buzzer | notifies the user when robot is done | $1.49 | https://www.amazon.com/dp/B0DVT1Q9NK |
+| **Part** | **Purpose** | **Price** | **Link** |
+|-----------|-------------|----------:|----------|
+| 3-in-1 Ultimate Kit for Arduino Uno R3 (Arduino Uno, L298N Motor Driver, Ultrasonic Sensor, 2× IR Sensors) | Main electronics and obstacle detection | **$69.99** | [Amazon](https://www.amazon.com/dp/B0CGJ235XN) |
+| ODISTAR Desktop Vacuum Cleaner | Provides suction for floor cleaning | **$12.98** | [Amazon](https://www.amazon.com/dp/B07Q128V6W) |
+| Big Buzzer | Alerts the user when cleaning is complete | **$1.49** | [Amazon](https://www.amazon.com/dp/B0DVT1Q9NK) |
 # Other Resources/Examples
 One of the best parts about Github is that you can view how other people set up their own work. Here are some past BSE portfolios that are awesome examples. You can view how they set up their portfolio, and you can view their index.md files to understand how they implemented different portfolio components.
 - [Example 1](https://trashytuber.github.io/YimingJiaBlueStamp/)
