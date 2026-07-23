@@ -55,7 +55,7 @@ const int trigPin = 3;
 const int echoPin = 4;
 const int SAMPLESIZE = 5; // values to take the median of
 const int TURNSPEED = 220; // has to turn fast
-const long INTERVAL = 60000; // run time before stopping
+const long INTERVAL = 30000; // run time before stopping
 const int DISTANCETOSTOP = 20; // stop distance for the ultrasonic sensor
 const int MAXMOTORSPEED = 220; // forward speed
 
