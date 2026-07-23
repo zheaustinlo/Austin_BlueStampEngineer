@@ -335,11 +335,12 @@ void stopMove() {
 ```
 
 # Bill of Materials
-| **Part** | **Note** | **Price** | **Link** |
-|-----------|-------------|----------:|----------|
-| 3-in-1 Ultimate Kit for Arduino Uno R3 (Arduino Uno, L298N Motor Driver, Ultrasonic Sensor, 2× IR Sensors) | Main electronics and obstacle detection | **$69.99** | [Amazon](https://www.amazon.com/dp/B0CGJ235XN) |
-| ODISTAR Desktop Vacuum Cleaner | Provides suction for floor cleaning | **$12.98** | [Amazon](https://www.amazon.com/dp/B07Q128V6W) |
-| Big Buzzer | Alerts the user when cleaning is complete | **$1.49** | [Amazon](https://www.amazon.com/dp/B0DVT1Q9NK) |
+
+| Part | Note | Price | Link |
+|------|------|------:|------|
+| 3-in-1 Ultimate Kit for Arduino Uno R3 (Arduino Uno, L298N Motor Driver, Ultrasonic Sensor, 2× IR Sensors) | Main electronics and obstacle detection | $69.99 | [Amazon](https://www.amazon.com/dp/B0CGJ235XN) |
+| ODISTAR Desktop Vacuum Cleaner | Provides suction for floor cleaning | $12.98 | [Amazon](https://www.amazon.com/dp/B07Q128V6W) |
+| Big Buzzer | Alerts the user when cleaning is complete | $1.49 | [Amazon](https://www.amazon.com/dp/B0DVT1Q9NK) |
 # Other Resources/Examples
 One of the best parts about Github is that you can view how other people set up their own work. Here are some past BSE portfolios that are awesome examples. You can view how they set up their portfolio, and you can view their index.md files to understand how they implemented different portfolio components.
 - [Example 1](https://trashytuber.github.io/YimingJiaBlueStamp/)
