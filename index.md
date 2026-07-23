@@ -79,7 +79,6 @@ unsigned long startTime; // the time since the program started running
 
 const float KP = 10; // steering correction strength
 
-
 void setup() {
   Serial.begin(9600);
 
@@ -119,6 +118,7 @@ void setup() {
 
   digitalWrite(vacuumPin, HIGH); // turns on the vacuum
 }
+
 int left = 0;
 int right = 0;
 float distance = 0;
@@ -197,8 +197,9 @@ void loop() {
     beeped = true;
   }
 }
+
 float otherDistance = 0;
-// Sends a short ultrasonic pulse and times how long the echo takes to
+// Sends a short ultrasonic pulse and times how long the echo takes to return
 float readSensorData() {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -215,7 +216,8 @@ float readSensorData() {
   }
   return otherDistance;
 }
-float median[SAMPLESIZE];
+
+float median[SAMPLESIZE]; // 5 readings
 float key;
 // Ultrasonic sensor takes 5 readings and using the median to filter out the bad readiings
 float readMedianDist() {
@@ -236,6 +238,7 @@ float readMedianDist() {
   }
   return median[SAMPLESIZE / 2];
 }
+
 sensors_event_t a, g, temp; 
 unsigned long currentTime;
 float dt, gyroX;
@@ -267,7 +270,6 @@ void calibrateGyro() {
 // drive forward
 float correction;
 int rightMotor, leftMotor;
-
 void moveForward(int speed) {
   // Serial.println("moving forward");
    correction = heading * KP; // calculate steering correction
@@ -337,6 +339,14 @@ void stopMove() {
 | 3-in-1 Ultimate Kit for Arduino Uno R3 (Arduino Uno, L298N Motor Driver, Ultrasonic Sensor, 2× IR Sensors) | Main electronics and obstacle detection | $69.99 | [Amazon](https://www.amazon.com/dp/B0CGJ235XN) |
 | ODISTAR Desktop Vacuum Cleaner | Provides suction for floor cleaning | $12.98 | [Amazon](https://www.amazon.com/dp/B07Q128V6W) |
 | Big Buzzer | Alerts the user when cleaning is complete | $1.49 | [Amazon](https://www.amazon.com/dp/B0DVT1Q9NK) |
+
+# References
+
+- Niall Connaughton. *Roomba Algorithms and Visualization*.  
+  https://blog.niallconnaughton.com/2016/01/25/roomba-algorithms-and-visualization/
+
+- YouTube. *MOSFET Tutorial* .  
+  https://www.youtube.com/watch?v=J4oO7PT_nzQ&t=375s
 
 # Other Resources/Examples
 One of the best parts about Github is that you can view how other people set up their own work. Here are some past BSE portfolios that are awesome examples. You can view how they set up their portfolio, and you can view their index.md files to understand how they implemented different portfolio components.
