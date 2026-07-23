@@ -335,7 +335,7 @@ void stopMove() {
 ```
 
 # Bill of Materials
-| **Part** | **Purpose** | **Price** | **Link** |
+| **Part** | **Note** | **Price** | **Link** |
 |-----------|-------------|----------:|----------|
 | 3-in-1 Ultimate Kit for Arduino Uno R3 (Arduino Uno, L298N Motor Driver, Ultrasonic Sensor, 2× IR Sensors) | Main electronics and obstacle detection | **$69.99** | [Amazon](https://www.amazon.com/dp/B0CGJ235XN) |
 | ODISTAR Desktop Vacuum Cleaner | Provides suction for floor cleaning | **$12.98** | [Amazon](https://www.amazon.com/dp/B07Q128V6W) |
