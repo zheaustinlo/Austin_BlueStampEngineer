@@ -23,13 +23,15 @@ For my second milestone, I wired two IR sensors and one ultrasonic sensor to the
 My first milestone was assembling the robot chassis. I attached the mini breadboard, TT motors, TT wheels, the L9110 motor driver, the Arduino Uno board, and three sensors to the robot. I also connected the motors to the motor driver and connected the motor driver's input pins to the Arduino so the Arduino could control the motors and move the car in different directions. In addition, I wrote and tested the code that enabled the robot to move forward, backward, turn left, and turn right autonomously. For my next milestone, I will wire the sensors to the Arduino and program the robot to detect and avoid obstacles. I will also write code that allows the robot to walk around randomly, so it can clean up a large area.
 
 # Schematics 
-<h4>Vacuum Holder</h4>
+<h3>Vacuum Holder</h3>
 <img src="vacuum_holder.jpg" width="500"><br>
-<b>Vacuum Holder STL:</b> <a href="vacuum%20holder(updated).stl">Download</a>
-<h4>Vacuum Lid</h4>
+<small><b>Vacuum Holder STL:</b> <a href="vacuum%20holder(updated).stl">Download</a></small>
+
+<h3>Vacuum Lid</h3>
 <img src="vacuum_lid.jpg" width="500"><br>
-<b>Vacuum Lid STL:</b> <a href="vacuum%20lid.stl">Download</a>
-<h4>Robot</h4>
+<small><b>Vacuum Lid STL:</b> <a href="vacuum%20lid.stl">Download</a></small>
+
+<h3>Robot</h3>
 <img src="robotpart1.jpg" width="500"><br>
 <img src="robotpart2.jpg" width="500">
 
