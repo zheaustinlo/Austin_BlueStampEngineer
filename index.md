@@ -342,11 +342,12 @@ void stopMove() {
 
 # References
 
+- SunFounder. *3-in-1 Starter Kit Documentation*.  
+  https://docs.sunfounder.com/projects/3in1-kit-r4/en/latest/
 - Niall Connaughton. *Roomba Algorithms and Visualization*.  
   https://blog.niallconnaughton.com/2016/01/25/roomba-algorithms-and-visualization/
-
-- YouTube. *MOSFET Tutorial* .  
-  https://www.youtube.com/watch?v=J4oO7PT_nzQ&t=375s
+- YouTube. *MOSFET Tutorial*.  
+  https://www.youtube.com/watch?v=J4oO7PT_nzQ
 
 # Other Resources/Examples
 One of the best parts about Github is that you can view how other people set up their own work. Here are some past BSE portfolios that are awesome examples. You can view how they set up their portfolio, and you can view their index.md files to understand how they implemented different portfolio components.
