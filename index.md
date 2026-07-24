@@ -7,8 +7,8 @@ This project uses an Arduino Uno to control a robot that automatically cleans th
 
 **Replace the BlueStamp logo below with an image of yourself and your completed project. Follow the guide [here](https://tomcam.github.io/least-github-pages/adding-images-github-pages-site.html) if you need help.**
 
-![Headstone Image](logo.svg)
-  
+<img src="headshot.jpg" width="350">
+
 # Final Milestone & Modifications
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/6Tg_-RMH1v0?si=8twbWN7D_aOu2v6G" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
