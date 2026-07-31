@@ -1,4 +1,3 @@
-# Autonomous Cleaner
 This project uses an Arduino Uno to control a robot that automatically cleans the floor. The robot is equipped with two IR sensors and one ultrasonic sensor to detect and avoid obstacles while moving around. A motor driver controls two DC motors, allowing the robot to move in different directions. A vacuum is attached to the robot so it cleans the floor as it moves. The robot operates fully autonomously without requiring human control.
 
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
@@ -6,6 +5,9 @@ This project uses an Arduino Uno to control a robot that automatically cleans th
 | Austin L. | Monta Vista High School | Electrical Engineering | Incoming Junior |
 
 <img src="headshot.jpg" width="350">
+
+# Demo Night 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/A-gn5oViRWo?si=vPqqxvhqq1bImRoD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 # Final Milestone & Modifications
 <iframe width="560" height="315" src="https://www.youtube.com/embed/6Tg_-RMH1v0?si=8twbWN7D_aOu2v6G" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
